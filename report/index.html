@@ -1,0 +1,101 @@
+<html>
+<head>
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+
+  <div id="writes" />
+  <div id="reads" />
+  <div id="queries" />
+
+  <script>
+function prepareWrites(json, name) {
+  return {
+    x: json.writes.map(w => w.size),
+    y: json.writes.map(w => w.elapsed),
+    type: 'scatter',
+    name,
+  };
+}
+function prepareReads(json, name) {
+  return {
+    x: json.reads.map(w => w.size),
+    y: json.reads.map(w => w.elapsed),
+    type: 'scatter',
+    name,
+  };
+}
+function prepareQueries(json, name) {
+  return {
+    x: json.queries.map(w => w.size),
+    y: json.queries.map(w => w.elapsed),
+    type: 'scatter',
+    name,
+  };
+}
+async function readDataAndVisualize() {
+  const res1 = await fetch('./iphone6.json');
+  const iphone6 = await res1.json();
+  const res2 = await fetch('./android4_1gb.json');
+  const android4 = await res2.json();
+  const res3 = await fetch('./android8_nexus5x.json');
+  const android8 = await res3.json();
+
+  var data = [
+    prepareWrites(iphone6, 'iphone6'),
+    prepareWrites(android4, 'android4.4 1gb'),
+    prepareWrites(android8, 'android8 Nexus5x'),
+  ];
+  var layout = {
+    title: 'Writes',
+    xaxis: {
+      title: 'size, MB',
+    },
+    yaxis: {
+      title: 'time, ms',
+    },
+  };
+
+  Plotly.newPlot('writes', data, layout);
+
+  var data2 = [
+    prepareReads(iphone6, 'iphone6'),
+    prepareReads(android4, 'android4.4 1gb'),
+    prepareReads(android8, 'android8 Nexus5x'),
+  ];
+  var layout2 = {
+    title: 'Reads',
+    xaxis: {
+      title: 'size, MB',
+    },
+    yaxis: {
+      title: 'time, ms',
+    },
+  };
+
+  Plotly.newPlot('reads', data2, layout2);
+
+  var data3 = [
+    prepareQueries(iphone6, 'iphone6'),
+    prepareQueries(android4, 'android4.4 1gb'),
+    prepareQueries(android8, 'android8 Nexus5x'),
+  ];
+  var layout3 = {
+    title: 'Queries',
+    xaxis: {
+      title: 'size, MB',
+    },
+    yaxis: {
+      title: 'time, ms',
+    },
+  };
+
+  Plotly.newPlot('queries', data3, layout3);
+}
+
+readDataAndVisualize();
+</script>
+</body>
+</html>
