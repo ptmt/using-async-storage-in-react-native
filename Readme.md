@@ -14,6 +14,10 @@ Choosing Redux means you persist your state to disk, using something like `redux
 
 So to understand a perspective and limitations, let's look at serialization and deserialization costs of using `JSON.stringify`/ `JSON.parse` and AsyncStorage:
 
+![Writes](https://raw.githubusercontent.com/ptmt/using-async-storage-in-react-native/master/report/writes.png)
+![Reads](https://raw.githubusercontent.com/ptmt/using-async-storage-in-react-native/master/report/reads.png)
+![Queries](https://raw.githubusercontent.com/ptmt/using-async-storage-in-react-native/master/report/queries.png)
+
 This can't be called a proper benchmark for various reasons. You can see that the performance is more than enough for iOS, but out-of-the-box Android devices can't process single AsyncStorage operation after it gets over ~2.5MB[*](https://github.com/ptmt/using-async-storage-in-react-native#-android-asyncstorage-issues). And anyway you probably don't want to wait more than 1-2 seconds for the first launch data load.
 
 ## Launch optimizations
