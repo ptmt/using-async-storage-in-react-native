@@ -42,11 +42,14 @@ async function readDataAndVisualize() {
   const android4 = await res2.json();
   const res3 = await fetch('./android8_nexus5x.json');
   const android8 = await res3.json();
+  const res4 = await fetch('./android8_nexus5x_2.json');
+  const android82 = await res4.json();
 
   var data = [
     prepareWrites(iphone6, 'iphone6'),
     prepareWrites(android4, 'android4.4 1gb'),
     prepareWrites(android8, 'android8 Nexus5x'),
+    prepareWrites(android82, 'android8 Nexus5x*'),
   ];
   var layout = {
     title: 'Writes',
@@ -64,6 +67,7 @@ async function readDataAndVisualize() {
     prepareReads(iphone6, 'iphone6'),
     prepareReads(android4, 'android4.4 1gb'),
     prepareReads(android8, 'android8 Nexus5x'),
+    prepareReads(android82, 'android8 Nexus5x*'),
   ];
   var layout2 = {
     title: 'Reads',

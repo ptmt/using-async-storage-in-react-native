@@ -1,6 +1,6 @@
 import { AsyncStorage } from 'react-native';
 
-export async function setItem(key, array, chunksNumber = 20) {
+export async function setItem(key, array, chunksNumber = 25) {
   const totalItems = array.length;
   const chunkLength = totalItems / chunksNumber;
   const arraysPromises = Array.apply(null, Array(chunksNumber)).map(
@@ -13,7 +13,7 @@ export async function setItem(key, array, chunksNumber = 20) {
   await Promise.all(arraysPromises);
 }
 
-export async function getItem(key, chunksNumber = 20) {
+export async function getItem(key, chunksNumber = 25) {
   const arraysPromises = Array.apply(null, Array(chunksNumber)).map(
     async (_, i) => {
       const serialized = await AsyncStorage.getItem(key + i);

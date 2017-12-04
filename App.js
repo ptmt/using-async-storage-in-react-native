@@ -19,7 +19,7 @@ const RNFS = require('react-native-fs');
 import { setItem, getItem } from './AsyncStorageArrayWrapper';
 
 const path = RNFS.DocumentDirectoryPath + '/report.json';
-const N = 40;
+const N = 35;
 let running = false;
 
 export default class App extends Component<{}> {

@@ -14,14 +14,14 @@ Choosing Redux means you persist your state to disk, using something like `redux
 
 So to understand a perspective and limitations, let's look at serialization and deserialization costs of using `JSON.stringify`/ `JSON.parse` and AsyncStorage:
 
-This can't be called a proper benchmark for various reasons. You can see that the performance is more than enough for iOS, but out-of-the-box Android devices can't process single AsyncStorage operation after it gets over ~2.5MB*. And anyway you probably don't want to wait more than 1-2 seconds for the first launch data load.
+This can't be called a proper benchmark for various reasons. You can see that the performance is more than enough for iOS, but out-of-the-box Android devices can't process single AsyncStorage operation after it gets over ~2.5MB[*](https://github.com/ptmt/using-async-storage-in-react-native#-android-asyncstorage-issues). And anyway you probably don't want to wait more than 1-2 seconds for the first launch data load.
 
-## Launching optimizations
+## Launch optimizations
 
-- Serialize minimal amount of data. `react-storage` has great filter middleware that allows you to blacklist certain keys that is not necessary to persist between relaunch.
+- Persist minimal amount of data. `react-storage` has great filter middleware that allows you to blacklist certain keys that is not necessary to persist between relaunch.
 - Split initial global state loading into chunks, load only most important data that needs to be shown to user for the first screen and delay others parts. Consider this combined reducer state:
 
-```
+```javascript
 {
   user: User,
   settings: Settings,
@@ -60,7 +60,7 @@ Still even having a pretty large collection, you can structure you data and use 
 
 Android has limits (and for reasons). You may increase the limit:
 
-```
+```java
 long size = 50L * 1024L * 1024L; // 50 MB
 
 com.facebook.react.modules.storage.ReactDatabaseSupplier
