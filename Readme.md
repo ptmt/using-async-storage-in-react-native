@@ -14,11 +14,9 @@ Choosing Redux means you persist your state to disk, using something like `redux
 
 So to understand a perspective and limitations, let's look at serialization and deserialization costs of using `JSON.stringify`/ `JSON.parse` and AsyncStorage:
 
-![Writes](https://raw.githubusercontent.com/ptmt/using-async-storage-in-react-native/master/report/writes.png)
-![Reads](https://raw.githubusercontent.com/ptmt/using-async-storage-in-react-native/master/report/reads.png)
-![Queries](https://raw.githubusercontent.com/ptmt/using-async-storage-in-react-native/master/report/queries.png)
+![Writes](https://raw.githubusercontent.com/ptmt/using-async-storage-in-react-native/master/report/writes.png) ![Reads](https://raw.githubusercontent.com/ptmt/using-async-storage-in-react-native/master/report/reads.png) ![Queries](https://raw.githubusercontent.com/ptmt/using-async-storage-in-react-native/master/report/queries.png)
 
-This can't be called a proper benchmark for various reasons. You can see that the performance is more than enough for iOS, but out-of-the-box Android devices can't process single AsyncStorage operation after it gets over ~2.5MB[*](https://github.com/ptmt/using-async-storage-in-react-native#-android-asyncstorage-issues). And anyway you probably don't want to wait more than 1-2 seconds for the first launch data load.
+See `App.js` for details. This can't be called a proper benchmark for various reasons, but reflects real world experience that I had. You can see that the performance is more than enough for iOS, but out-of-the-box Android devices can't process single AsyncStorage operation after it gets over ~2.5MB[*](https://github.com/ptmt/using-async-storage-in-react-native#-android-asyncstorage-issues). And anyway you probably don't want to wait more than 1-2 seconds for the first launch data load.
 
 ## Launch optimizations
 
@@ -42,18 +40,18 @@ In theory, all you need here to show the first screen is `user`, `settings` and 
 
 Basic rule here is "Do not store the whole lists".
 
-- Delayed loading. The same tip. If you have a collection with 1000 items, just load only first N first, and others later.
-- Lazy loading. An improved idea of previous point. Use `onEndReached` from `FlatList` (`VirtualizedList`) to load more items into collection.
+- **Delay loading**. The same tip as before, but applied to array in this case. If you have a collection with 1000 items, just load only first N first, and others later.
+- **Lazy loading**. An improved idea of previous point. Use `onEndReached` from `FlatList` (`VirtualizedList`) to load more items into collection.
 - Do not forget to trim the list before persist state to disk to keep core snapshot small, or use advanced techniques.
-- To load larger collections on Android (for temporary usage, such as search), you may want to use [wrapper](https://github.com/ptmt/using-async-storage-in-react-native/blob/master/AsyncStorageArrayWrapper.js) around it that splits array into chunks before saving. f
+- To load larger collections on Android (for temporary usage, such as search) more than 2MB in a batch, you may want to look at [wrapper](https://github.com/ptmt/using-async-storage-in-react-native/blob/master/AsyncStorageArrayWrapper.js) to see the idea of splitting array into chunks before saving.
 
-  ## Queries
+## Queries
 
 It is the hardest part, if you needed queries extensively then using optimized DB with indexes could be the only choice.
 
 Still even having a pretty large collection, you can structure you data and use some tricks to speed up things.
 
-- Memoized selectors <https://github.com/reactjs/reselect>. It's common to use the same selector for different connected components (e.g. number of unread messages). Selector is a pure function, so it could be cached.
+- **Memoized selectors** <https://github.com/reactjs/reselect>. It's common to use the same selector for different connected components (e.g. number of unread messages). Selector is a pure function, so it could be cached.
 - Special data structures, like a hashmap or a binary tree. Indexes that can serve you in limited use cases.
 - Working with long queries with standalone services
 - Tradeoff offline search for online. I wouldn't recommend it if it's even nearly close to the core feature of the app, but sometimes it's the only choice.
